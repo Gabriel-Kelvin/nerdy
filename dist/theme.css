@@ -1,0 +1,48 @@
+/* Moonlit meadow: a complete, opt-in theme. */
+:root {color-scheme:light}
+.theme-toggle{width:38px;height:38px;flex-shrink:0;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:#fff;color:#326653;font-size:25px;line-height:1}
+.theme-toggle:hover{background:#e9f4ee}
+html[data-theme="dark"]{color-scheme:dark;background:#101e1b;color:#e3eee8;--green:#91d7b7;--muted:#a4b9ae;--line:#344c41;--surface:#1a2d25;--raised:#243d31}
+[data-theme="dark"] :is(.sidebar,.day-pill,.journey-card,.panel,.skill-card,.wide-panel,.grade-btn,.collectible,.metric,.problem,.answer,.finish-stats div,.secondary,.theme-toggle,dialog,dialog select,dialog input){background:var(--surface);color:#e3eee8;border-color:var(--line)}
+[data-theme="dark"] :is(.secondary,.answer){border-bottom-color:#3d5949}
+[data-theme="dark"] :is(.nav button,.parent-nav,.breadcrumb b){color:#b4c9bd}
+[data-theme="dark"] .nav button.active{background:#274b39;color:#aeebc9}
+[data-theme="dark"] :is(.friend-note,.info,.hint){background:#213c2e;color:#c4dbc9}
+[data-theme="dark"] :is(.primary,.grade-btn.selected){background:#247857;color:#fff;border-color:#114b33}
+[data-theme="dark"] .primary:hover{background:#2b8965}
+[data-theme="dark"] .brandmark{background:#91d7b7;color:#102b1e}
+[data-theme="dark"] .profile{background:#4c422c;border-color:var(--line);box-shadow:0 0 0 1px var(--line)}
+[data-theme="dark"] .theme-toggle:hover{background:var(--raised)}
+[data-theme="dark"] :is(.tag,.skill-card .tag){background:#294433;color:#bedec5}
+[data-theme="dark"] :is(.bar,.session-top .bar){background:#304539}
+[data-theme="dark"] .bar span{background:#87c9a1}
+[data-theme="dark"] :is(.week-day,.habit-note,.bar-label,.daily p,.footer-note,.close,.visual-sign){color:#a4b9ae}
+[data-theme="dark"] .week-day b{background:#243a2d;border-color:var(--line);color:#a4b9ae}
+[data-theme="dark"] .week-day.today b{background:#493e24;border-color:#d3b76d;color:#f6d98a}
+[data-theme="dark"] .week-day.done b{background:#357859;border-color:#4c9771;color:white}
+[data-theme="dark"] .habit-note{border-color:var(--line)}
+[data-theme="dark"] :is(.quest-icon,.companion){background:#383322;border-color:#534a31}
+[data-theme="dark"] :is(.companion p,.companion .eyebrow,.journey-copy .eyebrow){color:#dec795}
+[data-theme="dark"] .daily-emoji{background:#28394b}
+[data-theme="dark"] .skill-symbol{background:#243f4b;color:#a4d2e8}
+[data-theme="dark"] .skill-card:nth-child(3n+2) .skill-symbol{background:#38314d;color:#c7b5ea}
+[data-theme="dark"] .skill-card:nth-child(3n+3) .skill-symbol{background:#48382b;color:#e7bc91}
+[data-theme="dark"] .collectible.locked{background:#18251f}
+[data-theme="dark"] .math-display{color:#b0e5c7}
+[data-theme="dark"] .counters{border-color:#4d6d58}
+[data-theme="dark"] .counter.empty{background:#334b3c}
+[data-theme="dark"] .fraction-strip span:not(.fill){background:#263d2f}
+[data-theme="dark"] .answer:hover:not(:disabled){background:#274632;border-color:#88bd96}
+[data-theme="dark"] .answer .key{color:#b9cdbf;border-color:#56715d}
+[data-theme="dark"] .answer.correct{background:#244b30;border-color:#80bc86;color:#c1edc2}
+[data-theme="dark"] .answer.wrong{background:#4b3b24;border-color:#cfac65;color:#ffe0a4}
+[data-theme="dark"] .world-card{background:#1e373c}
+[data-theme="dark"] .world-art{filter:brightness(.77) saturate(.8)}
+[data-theme="dark"] .world-card:after{background:linear-gradient(180deg,#092226bf,transparent 48%,#071e2138)}
+[data-theme="dark"] :is(.world-label h2,.world-label p,.world-label .eyebrow){color:#eef9ef;text-shadow:0 1px 4px #0a211e}
+[data-theme="dark"] :is(.world-switch,.marker-label){background:#203b32;color:#e4f2e7;border-color:#4b6a56}
+[data-theme="dark"] .island-marker{border-color:#c4dfc8}
+[data-theme="dark"] .island-marker.next{background:#284637dc;color:#d2e8d6}
+[data-theme="dark"] dialog::backdrop{background:#030d0abd}
+[data-theme="dark"] #toast{background:#b5e2bd;color:#173c23}
+@media(max-width:620px){.topstats{gap:10px}.theme-toggle{width:33px;height:33px;font-size:23px}[data-theme="dark"] .nav button.active{background:transparent;color:#aeebc9}}
