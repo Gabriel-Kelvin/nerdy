@@ -1,0 +1,30 @@
+.auth-layout{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:var(--auth-bg,#f5f8f7)}
+.auth-world{position:relative;overflow:hidden;min-height:100vh;background:#174d39;isolation:isolate}
+.auth-world>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.auth-world:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#092f2955,transparent 30%,#092f29e8 100%)}
+.auth-brand{display:flex;align-items:center;gap:12px;color:#fff;font:900 36px Nunito;padding:36px;letter-spacing:-1.5px}
+.auth-brand .brandmark{background:#fff;color:#176447}
+.auth-world-copy{position:absolute;bottom:65px;left:45px;right:45px;color:white}
+.auth-world-copy .eyebrow{font-size:11px;color:#daf0d9}
+.auth-world-copy h1{font-size:46px;line-height:1.12;margin:17px 0}
+.auth-world-copy p{max-width:430px;color:#e0efdf;font-size:16px}
+.auth-side{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:46px 36px}
+.auth-form-wrap{width:100%;max-width:395px}
+.auth-kicker{color:var(--green);font-size:11px;font-weight:800;letter-spacing:1.5px}
+.auth-form-wrap h1{font-size:34px;margin:12px 0}
+.auth-intro{color:var(--muted);font-size:15px;margin-bottom:25px;line-height:1.65}
+#auth-form label{display:block;font-size:14px;font-weight:700;margin:16px 0 8px}
+#auth-form input:not([type=checkbox]){width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;color:inherit;background:white;min-height:49px;font:inherit}
+#auth-form input:focus{outline:3px solid #67aa8780;outline-offset:2px}
+#auth-form .password-field{position:relative}#auth-form .password-field input{padding-right:62px}
+.password-toggle{position:absolute;right:8px;top:8px;height:34px;padding:4px 8px;border:0;background:none;color:var(--green);font-size:13px;font-weight:700}
+#auth-form .adult-check{display:flex;align-items:flex-start;gap:10px;font-size:13px;font-weight:400;line-height:1.6;margin:20px 0}
+.adult-check input{margin-top:4px;accent-color:#27724d;width:17px;height:17px;flex-shrink:0}
+.auth-submit{width:100%;margin-top:20px;min-height:51px}.auth-submit:disabled{opacity:.6}
+.auth-forgot{display:block;margin:20px auto;text-align:center}.auth-divider{height:1px;background:var(--line);margin:26px 0 21px}
+.auth-switch{font-size:14px;text-align:center}.auth-privacy,.auth-foot{font-size:12px;color:var(--muted);line-height:1.7;margin-top:26px;text-align:center}
+.auth-foot{margin-top:40px}.auth-message{padding:13px;border-radius:12px;background:#e4f3e7;color:#275b3b;font-size:14px;line-height:1.6;margin-top:15px}.auth-message.error{background:#fff0db;color:#704a16}.auth-message:empty{display:none}.auth-mail-icon{font-size:48px;color:var(--green);margin-bottom:18px}
+.cloud-status{border:0;background:none;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--green);padding:5px 0;min-height:30px}.cloud-status[data-status=error]{color:#a77930}.cloud-status[data-status=saving]{color:var(--muted)}.account-email{overflow-wrap:anywhere}.account-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.journal-list{list-style:none;padding:0;margin:15px 0}.journal-list li{padding:11px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;font-size:13px}.account-note{font-size:13px;color:var(--muted);line-height:1.6}.sync-strip{display:flex;justify-content:flex-end;min-height:30px}.session .sync-strip{justify-content:center}.legacy-import{padding:14px;border:1px solid var(--line);border-radius:12px;margin-top:20px}
+[data-theme=dark] .auth-layout{--auth-bg:#101e1b}[data-theme=dark] #auth-form input:not([type=checkbox]){background:#1a2d25;border-color:var(--line)}[data-theme=dark] .auth-message{background:#294533;color:#d4edd6}[data-theme=dark] .auth-message.error{background:#493b24;color:#efdcb5}[data-theme=dark] .cloud-status[data-status=error]{color:#e3bb79}
+@media(max-width:900px){.auth-world-copy{left:28px;right:28px}.auth-world-copy h1{font-size:36px}.auth-side{padding:35px 25px}.auth-form-wrap h1{font-size:29px}}
+@media(max-width:620px){.auth-layout{display:block}.auth-world{min-height:180px;height:180px}.auth-brand{padding:21px;font-size:29px}.auth-world>img{object-position:center 52%}.auth-world-copy{display:none}.auth-side{padding:27px 24px 35px}.auth-form-wrap{max-width:430px}.auth-form-wrap h1{font-size:30px}.auth-intro{margin-bottom:20px}.auth-foot{margin-top:25px}.cloud-status{font-size:11px}.sync-strip{margin-bottom:-12px}.session .sync-strip{margin-bottom:0}}

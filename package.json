@@ -1,2 +1,17 @@
-{"name":"nerdy-math-world","version":"1.0.0","private":true,"type":"module","scripts":{"start":"node server.mjs","test":"node tests/engine.test.mjs"}}
-
+{
+  "name": "nerdy-math-world",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node tests/engine.test.mjs && node tests/cloud-state.test.mjs",
+    "build": "node scripts/bundle-supabase.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.116.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

@@ -36,7 +36,7 @@ export function problem(id,level,grade=1){
  return {id,answer,display,prompt,hint,visual,choices};
 }
 export function record(state,{id,ok,hint,ms,recall,now=Date.now()}){
- const s=skillState(state,id);state.skills[id]=s;const attempt={id,ok,hint,ms:Math.round(ms),at:now,level:s.level,recall};s.started??=now;s.history.push(attempt);s.history=s.history.slice(-40);state.attempts.push(attempt);state.attempts=state.attempts.slice(-3000);
+ const s=skillState(state,id);state.skills[id]=s;const attempt={eventId:crypto.randomUUID(),id,ok,hint,ms:Math.round(ms),at:now,level:s.level,recall};s.started??=now;s.history.push(attempt);s.history=s.history.slice(-40);state.attempts.push(attempt);s.updatedAt=now;
  const recent=s.history.slice(-8),clean=recent.filter(a=>a.ok&&!a.hint),fluent=state.untimed||clean.filter(a=>a.ms<=(state.grade<=1?45000:30000)).length>=6;
  if(!ok||hint){if(recall){s.due=now+DAY;}if(s.history.slice(-3).filter(a=>!a.ok).length>=2)s.level=Math.max(1,s.level-1);}
  else if(s.history.length%4===0&&s.history.slice(-4).every(a=>a.ok&&!a.hint)){s.level=Math.min(5,s.level+1);}
@@ -44,7 +44,7 @@ export function record(state,{id,ok,hint,ms,recall,now=Date.now()}){
  return attempt;
 }
 export function finishRecall(state,id,results,now=Date.now()){
- const s=state.skills[id];if(!s||results.length<3)return;
+ const s=state.skills[id];if(!s||results.length<3)return;s.updatedAt=now;
  if(results.every(a=>a.ok&&!a.hint)){s.checks=Math.min(3,s.checks+1);s.due=now+[DAY,3*DAY,7*DAY,14*DAY][s.checks];}else{s.checks=Math.max(0,s.checks-1);s.due=now+DAY;}
 }
 export function pickSkill(state){const eligible=SKILLS.filter(s=>s.min<=state.grade);const due=eligible.filter(s=>{const p=skillState(state,s.id);return p.due&&p.due<=Date.now()}).sort((a,b)=>skillState(state,a.id).due-skillState(state,b.id).due);if(due.length)return due[0].id;return eligible.sort((a,b)=>{const sa=skillState(state,a.id),sb=skillState(state,b.id);return (sa.due?100:sa.history.length)-(sb.due?100:sb.history.length)})[0].id;}
