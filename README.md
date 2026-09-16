@@ -1,25 +1,46 @@
-# Nerdy · Pip's math world
+# Nerdy · Nova's math universe
 
-Start locally with `npm start`, then visit http://127.0.0.1:5173. The bundled browser app is ready to run. Use `npm ci` and `npm run build` only to rebuild the pinned Supabase SDK bundle. Internet access is needed for authentication and cloud storage. Run the learning-engine checks with `npm test`.
+Start locally with `npm start`, then visit http://127.0.0.1:5173. The browser app is in `dist/` and is ready to run. `npm ci` installs pinned dependencies; `npm run build` rebuilds the Supabase SDK bundle. Internet access is required for login and cloud saves. Run `npm test` for learning, cloud-conflict, question-generation, and interaction checks.
 
-The website lives in `dist/`. It includes adaptive arithmetic and visual numeracy practice, six-question adventures, first-attempt evidence, delayed recall, earned companions, optional sound and read-aloud, comfortable pace mode, and a parent journal with JSON export. Grade selection is a starting point; all ten practice areas remain explorable.
+## Nova and the four worlds
 
-## Learning model
+Nova is one star-spark guide across the map, questions, constellation, and celebrations. Nova first appears at Starlight Summit, wears a leaf crown in Canopy Grove and fins in Wonder Lagoon, and gains glow/color from earned learning evidence. Guidance uses the adaptive model and reviewed phrases, not a generative chat. There is no personal-message input or history. A personal-concern choice redirects the learner to a trusted grown-up. Up to three optional interests tailor question objects; these preferences can be changed or cleared.
 
-Difficulty adjusts within each math area. Seven of the last eight first attempts must be independently correct; six must be comfortably fluent (45 seconds for K–1, 30 seconds for later grades) unless comfortable pace mode is enabled. This schedules a next-day recall. Three independent recall answers are required to pass each delayed check. Successful checks return after 3, 7, then 14 days; a failed check schedules next-day practice and reduces the recall milestone. A session cannot create a second same-day recall opportunity. Completing sessions never grants mastery.
+The four illustrated landscapes share 24 connected discoveries:
 
-Evidence, explorer settings, rewards, theme, and selected world are stored in Supabase per adult account. Email/password signup, login, and logout are implemented. Verification and password recovery are deferred. The private learning-journals Storage bucket holds exported JSON journals. Row-level policies restrict records and files to their owner. The browser contains only a publishable key, never an administrative credential.
+| World | Discoveries |
+| --- | --- |
+| Little Meadow | Count to 5; count to 20; compare; add within 10; subtract within 10; shapes |
+| Canopy Grove | Tens and ones; hundreds and tens; two-digit addition; equal groups; multiplication; rectangle area |
+| Wonder Lagoon | Equal sharing; division; halves and quarters; naming fractions; equivalent fractions; like-denominator addition |
+| Starlight Summit | Adding lengths; metres to centimetres; tenths; decimal place value; decimal addition; larger multiplication |
 
-Pending saves are cached under the signed-in user ID and retried when connectivity returns. Revision checks merge concurrent discoveries without double-counting rewards. Resets use a separate generation; conflicting unsaved progress can be downloaded before loading the cloud copy. Earlier device-only progress requires explicit import in My account. One explorer is supported per adult account; classroom rosters and multiple child profiles are not implemented.
+All discoveries remain freely explorable. A shared prerequisite graph recommends an appropriate next step across worlds. Direct fluent evidence in prerequisites opens their successors; strong successor evidence can suggest a prerequisite check but never certifies it. Fragile related skills influence the next recommendation. The visible constellation shows these connections.
 
-Supabase project: kchfinneyxkzwwgptydx (Mumbai, free tier). Schema and policies are in supabase/schema.sql. The transactional test supabase/verify-rls.sql checks two-account isolation and rolls back its fixtures.
+## Evidence and adaptive review
 
-Email verification and password recovery are currently deferred at the owner’s request. Disable Authentication → Sign In / Providers → Confirm email in Supabase to enable immediate email/password signup. No reset or resend buttons are exposed, and authentication tokens in old email links are not automatically accepted by the app.
+Each adventure has six questions. Only the first attempt is scored: retries or hint-assisted success never become independent correct answers. Challenge level adjusts from recent unassisted performance. Questions alternate story, picture, and symbolic presentation, with subject-specific variations.
 
-## Scope and evidence
+An idea is **Taking root** after at least seven of the latest eight first attempts are correct without help, at least two formats have been solved, a level-two-or-higher challenge has been solved, and six answers meet the comfortable fluency threshold. Thresholds are 45 seconds for K–1 and 30 seconds later, with no visible timer. Comfortable pace removes the speed requirement for attempts made in that mode. Each attempt retains its fluency setting, so changing settings cannot revoke earned discoveries.
 
-This is a functional product prototype, not a validated full K–5 curriculum or a proven substitute for tutoring. Ten representative math areas contain varying depth; comprehensive standards coverage, diagnostic placement, transfer tasks, and curriculum-level mastery require further instructional development. Labels refer to observed practice evidence, not certification of an entire subject. The UI is currently English with language-light visual math models and browser-supported read-aloud.
+**Remembered** additionally requires three successful delayed checks, strong current first-attempt evidence, and a recall estimate above the current-strength threshold. A review checks three independent answers; checks must be at least 18 hours apart. The heuristic forgetting curve uses time since practice and a stability value. Passing reviews increases stability, with comfortable response speed influencing the amount; failing reduces stability and the current recall-check count. Recommendations prioritize due reviews and fragile ideas. This is adaptive scheduling, not fixed 1/3/7-day progression and not a measured probability of retention.
 
-A production school release needs teacher workflows, accessibility and localization review, safeguarding/privacy review, content validation, and an independently evaluated learning study. A pilot should compare pre/post and delayed assessments at matched difficulty against an appropriate comparison group. Session length alone is not evidence of learning.
+Each discovery can earn three permanent milestones: taking root, one delayed check, and three delayed checks. World story beats and visible light/path effects unlock at totals of 1, 6, and 12 milestones. Keepsakes and Nova's glow use earned evidence. Current readiness can fade while earned scenery and keepsakes remain. There are no paid unlocks, lost streak rewards, or compulsory extra sessions.
 
-The Groq credential supplied in the conversation was not saved or embedded. All question generation and answer checking are deterministic mathematical operations, with zero model token use.
+## Accounts and storage
+
+Email/password signup, login, and logout use Supabase. Email verification and password recovery are deferred at the owner's request, with Confirm email disabled. No reset or resend options appear. One explorer is supported per adult account.
+
+Attempts, interests, settings, rewards, theme, and world are stored in Supabase per account. Private exported JSON journals use the `learning-journals` Storage bucket. Ownership-based row-level policies protect records and files. The browser contains only a publishable key. No administrative credential or model API secret is embedded.
+
+Pending saves are cached under the signed-in user ID. Revision checks merge concurrent discoveries without double-counting rewards. Reset generations prevent stale devices from silently restoring reset progress; an unsaved copy can be downloaded before loading the cloud copy. Earlier device-only progress requires explicit import. Existing practice and rewards are preserved, but legacy broad-skill attempts do not certify the new atomic discoveries.
+
+Supabase project: `kchfinneyxkzwwgptydx` (Mumbai, free tier). Schema and policies: `supabase/schema.sql`. Transactional isolation test: `supabase/verify-rls.sql`. Nova's metadata fits the existing state document without a schema migration.
+
+## Scope and validation
+
+This is a functional prototype with a prerequisite graph, not an ALEKS implementation or a validated Knowledge Space Theory assessment. Twenty-four representative discoveries do not constitute a full K–5 curriculum. The interface is English with visual math models and optional browser read-aloud. Comprehensive localization, teacher workflows, accessibility review, instructional content validation, and an independent learning study remain future work.
+
+Tests cover 30,000 legacy questions, 4,320 Nova question samples, graph dependencies, delayed recall, same-day replay protection, permanent earned milestones, interest merging, cloud conflict/account isolation behavior, and the main UI interactions. Real Supabase signup, a separate password login, and state reload were also verified with a disposable account, then the account was removed. These checks establish software behavior, not demonstrated learning gains.
+
+Question answers are computed locally. Nova's guidance uses no model tokens. Original generated artwork and prompt provenance are recorded in `docs/nova-art.json`.

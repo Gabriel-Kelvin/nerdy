@@ -12,7 +12,7 @@ export const SKILLS=[
 ];
 export const DAY=86400000;
 export const dateKey=(t=Date.now())=>{const d=new Date(t);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-export function fresh(){return {version:1,name:'Explorer',grade:1,avatar:'🌱',seeds:0,days:[],sessions:[],skills:{},attempts:[],sound:false,untimed:false};}
+export function fresh(){return {version:1,name:'Explorer',grade:1,avatar:'🌱',seeds:0,days:[],sessions:[],skills:{},attempts:[],sound:false,untimed:false,nova:{introduced:false,interests:['nature']}};}
 export function skillState(state,id){return state.skills[id]??{level:Math.min(4,Math.max(1,state.grade)),history:[],checks:0,due:null,started:null};}
 export function status(s){if(s.checks>=3)return 'Remembered';if(s.due)return 'Ready for recall';if(s.history.length)return 'Growing';return 'Not explored';}
 export function progress(s){return s.checks>=3?100:s.due?55+s.checks*15:Math.min(50,s.history.filter(a=>a.ok&&!a.hint).length*6);}

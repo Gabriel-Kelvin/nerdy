@@ -1,4 +1,5 @@
 import {fresh,SKILLS} from './engine.js';
+import {INTERESTS} from './constellation.js';
 const clone=x=>JSON.parse(JSON.stringify(x));
 const known=new Set(SKILLS.map(s=>s.id));
 const avatars=new Set(['🌱','🦊','🐸','🦉','🦋','🐉']);
@@ -9,6 +10,7 @@ export function normalize(raw){
  s.grade=Math.round(number(data.grade,0,5,1));s.avatar=avatars.has(data.avatar)?data.avatar:'🌱';
  s.sound=data.sound===true;s.untimed=data.untimed===true;s.theme=data.theme==='dark'?'dark':'light';
  s.generation=typeof data.generation==='string'?data.generation:'initial';s.world=Math.round(number(data.world,0,3,0));
+ s.nova={introduced:data.nova?.introduced===true,interests:[...new Set((Array.isArray(data.nova?.interests)?data.nova.interests:['nature']).filter(id=>INTERESTS.some(i=>i.id===id)))].slice(0,3)};if(!s.nova.interests.length)s.nova.interests=['nature'];
  const cleanAttempt=a=>a&&known.has(a.id)&&typeof a.ok==='boolean'&&Number.isFinite(a.at)&&Number.isFinite(a.ms);
  s.attempts=(Array.isArray(data.attempts)?data.attempts:[]).filter(cleanAttempt).map(a=>({...a,eventId:typeof a.eventId==='string'?a.eventId:`legacy-${a.id}-${a.at}`,hint:a.hint===true,level:Math.round(number(a.level,1,5,1)),recall:a.recall===true,ms:number(a.ms,0,86400000,0)}));
  s.sessions=(Array.isArray(data.sessions)?data.sessions:[]).filter(a=>a&&known.has(a.id)&&Number.isFinite(a.at)).map(a=>({...a,eventId:typeof a.eventId==='string'?a.eventId:`legacy-${a.id}-${a.at}`,correct:Math.round(number(a.correct,0,6,0)),total:6,seeds:Math.round(number(a.seeds,0,24,0)),recall:a.recall===true}));
@@ -23,6 +25,8 @@ export function mergeProgress(remote,local,base){
  if(remote.generation!==base.generation||local.generation!==base.generation){const e=new Error('Progress was reset on another device. Your unsaved copy is kept here; download it before loading the saved world.');e.code='RESET_CONFLICT';throw e;}
  const result=clone(remote);
  for(const key of ['name','grade','avatar','sound','untimed','theme','world'])if(local[key]!==base[key])result[key]=local[key];
+ result.nova.introduced=remote.nova.introduced||local.nova.introduced;
+ if(JSON.stringify(local.nova.interests)!==JSON.stringify(base.nova.interests))result.nova.interests=local.nova.interests;
  result.attempts=union(remote.attempts,local.attempts,a=>a.eventId||`${a.id}-${a.at}`);
  result.sessions=union(remote.sessions,local.sessions,a=>a.eventId||`${a.id}-${a.at}`);
  result.days=[...new Set([...remote.days,...local.days])].sort();

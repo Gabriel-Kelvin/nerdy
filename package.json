@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
-    "test": "node tests/engine.test.mjs && node tests/cloud-state.test.mjs",
+    "test": "node tests/engine.test.mjs && node tests/cloud-state.test.mjs && node tests/constellation.test.mjs && node tests/interaction.test.mjs",
     "build": "node scripts/bundle-supabase.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0"
   },
   "devDependencies": {
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "happy-dom": "20.14.5"
   }
 }

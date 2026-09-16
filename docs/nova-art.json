@@ -1,0 +1,40 @@
+[
+  {
+    "name": "little-meadow",
+    "path": "dist/worlds/meadow.png",
+    "prompt": "Use case: stylized-concept. Asset type: independent landscape background illustration for a premium K–5 math adventure app.\nStyle/medium: lush stylized 3D toy-diorama storybook, inviting floating island environment, sophisticated saturated colors, cinematic soft light, polished tactile rounded surfaces, beautiful high quality illustration.\nComposition/framing: panoramic landscape, 1536x1024 desired. Leave the upper-left quarter airy and visually quiet with atmospheric sky or soft haze for a title overlay. Show spacious landscape surfaces for earned interactive features to be overlaid later. Strong inviting depth and carefully composed readable layers.\nConstraints: no characters, no creatures, no faces, no eyes, no text, no letters, no numbers, no labels, no UI, no borders, no watermark. Entire image must be a finished landscape illustration.\nPrimary request: Little Meadow. A gentle floating meadow island with winding grassy stepping paths, scattered white daisies, softly rounded green hills, a small clear stream crossed by rounded stepping stones. Warm peach sunrise in the sky, fresh spring green grass, softly glowing golden edges. Friendly spacious composition with low rolling layers and gardenlike natural beauty.",
+    "generator": "built-in image_gen",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "name": "canopy-grove",
+    "path": "dist/worlds/canopy.png",
+    "prompt": "Use case: stylized-concept. Asset type: independent landscape background illustration for a premium K–5 math adventure app.\nStyle/medium: lush stylized 3D toy-diorama storybook, inviting floating island environment, sophisticated saturated colors, cinematic soft light, polished tactile rounded surfaces, beautiful high quality illustration.\nComposition/framing: panoramic landscape, 1536x1024 desired. Leave the upper-left quarter airy and visually quiet with atmospheric sky or soft haze for a title overlay. Show spacious landscape surfaces for earned interactive features to be overlaid later. Strong inviting depth and carefully composed readable layers.\nConstraints: no characters, no creatures, no faces, no eyes, no text, no letters, no numbers, no labels, no UI, no borders, no watermark. Entire image must be a finished landscape illustration.\nPrimary request: Canopy Grove. A majestic floating forest island with towering rounded tree trunks supporting treehouse platforms layered upward, emerald foliage in lush pillowy clusters, elegant hanging rope bridges between platforms, a few warm amber lanterns. Clear sense of upward discovery and climbing through a canopy. Rich emerald greens, subtle turquoise mist, warm amber accents, soft daylight filtering through leaves. Keep an airy opening of sky in upper left.",
+    "generator": "built-in image_gen",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "name": "wonder-lagoon",
+    "path": "dist/worlds/lagoon.png",
+    "prompt": "Use case: stylized-concept. Asset type: independent landscape background illustration for a premium K–5 math adventure app.\nStyle/medium: lush stylized 3D toy-diorama storybook, inviting floating island environment, sophisticated saturated colors, cinematic soft light, polished tactile rounded surfaces, beautiful high quality illustration.\nComposition/framing: panoramic landscape, 1536x1024 desired. Leave the upper-left quarter airy and visually quiet with atmospheric sky or soft haze for a title overlay. Show spacious landscape surfaces for earned interactive features to be overlaid later. Strong inviting depth and carefully composed readable layers.\nConstraints: no characters, no creatures, no faces, no eyes, no text, no letters, no numbers, no labels, no UI, no borders, no watermark. Entire image must be a finished landscape illustration.\nPrimary request: Wonder Lagoon. A magical blue-turquoise lagoon on an inviting floating island, translucent shallow water, coral terraces and smooth shell islands, round stepping stones making a gentle winding route. Clearly visible luminous underwater depth, glossy water caustics, rounded sculptural coral forms, aquamarine and cyan with soft coral-peach accents. Soft cinematic daylight, dreamy and inviting. Broad pale blue atmosphere in upper left.",
+    "generator": "built-in image_gen",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "name": "starlight-summit",
+    "path": "dist/worlds/summit.png",
+    "prompt": "Use case: stylized-concept. Asset type: independent landscape background illustration for a premium K–5 math adventure app.\nStyle/medium: lush stylized 3D toy-diorama storybook, inviting floating island environment, sophisticated saturated colors, cinematic soft light, polished tactile rounded surfaces, beautiful high quality illustration.\nComposition/framing: panoramic landscape, 1536x1024 desired. Leave the upper-left quarter airy and visually quiet with atmospheric sky or soft haze for a title overlay. Show spacious landscape surfaces for earned interactive features to be overlaid later. Strong inviting depth and carefully composed readable layers.\nConstraints: no characters, no creatures, no faces, no eyes, no text, no letters, no numbers, no labels, no UI, no borders, no watermark. Entire image must be a finished landscape illustration.\nPrimary request: Starlight Summit. An inviting floating mountain island under an indigo night sky, violet crystal mountain terraces, beautiful precisely geometric stairways climbing between broad terraces, a small elegant brass observatory, vast stars and delicate aurora overhead. Purple, deep indigo and warm gold palette, soft magical cinematic lighting, translucent violet crystals glowing subtly. Upper left is quiet deep indigo sky with sparse stars, main mountain and observatory rise toward right.",
+    "generator": "built-in image_gen",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "name": "nova",
+    "path": "dist/nova.png",
+    "generator": "built-in image_gen",
+    "prompt": "Use case: stylized-concept.\nAsset type: consistent main character sprite for a premium K–5 math adventure app. Transparent-background full-body portrait PNG, at least 1024x1024 square.\nPrimary request: Nova, a single small rounded five-point star-spark character, centered and fully visible, luminous golden-yellow core with peach edges and a gentle mint/turquoise halo. Small dark friendly curious eyes and a subtle smile. Two little floating rounded glove-like nubs as hands, one at each side. Exactly one star character with exactly five soft rounded points.\nStyle/medium: premium stylized soft 3D toy, tactile softly rounded smooth surfaces, soft cinematic lighting, expressive but minimal.\nComposition/framing: neutral front three-quarter pose, entire star and both floating hands clearly visible, generous transparent padding on all sides.\nConstraints: genuinely transparent background with preserved alpha channel. No costume, no clothes, no accessories, no text, no scene, no floor, no ground shadow, no other creatures, no other characters, no border, no watermark. The mint/turquoise halo is subtle and isolated around Nova, fading into full transparency.\n"
+  }
+]
