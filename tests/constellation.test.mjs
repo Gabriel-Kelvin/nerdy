@@ -10,8 +10,8 @@ const visit=(id,path=[])=>{assert(!path.includes(id),`cycle: ${id}`);for(const p
 let samples=0;
 for(const n of NODES)for(let level=0;level<3;level++)for(let i=0;i<60;i++){
  const state=fresh();if(level)answer(state,n.id,level===1?4:6,now-10000);
- state.nova.interests=['dinosaurs','space'];const p=novaProblem(state,n.id,i,now+10000);
- assert.equal(p.choices.length,4,n.id);assert.equal(new Set(p.choices.map(String)).size,4,n.id);assert(p.choices.includes(p.answer));assert(p.hint&&p.prompt);assert.equal(p.node,n.id);assert(['story','visual','symbolic'].includes(p.form));assert(p.interest==='dinosaurs'||p.interest==='space');
+ const p=novaProblem(state,n.id,i,now+10000);
+ assert.equal(p.choices.length,4,n.id);assert.equal(new Set(p.choices.map(String)).size,4,n.id);assert(p.choices.includes(p.answer));assert(p.hint&&p.prompt);assert.equal(p.node,n.id);assert(['story','visual','symbolic'].includes(p.form));assert(!('interest' in p));
  if(p.display.includes(' + ')&&p.display.includes(' = ?')&&!['addFractions','tenths','decimals'].includes(n.id)){const match=p.display.match(/^([\d.]+)(?: cm)? \+ ([\d.]+)(?: cm)? =/);if(match)assert(Math.abs(Number(p.answer)-(Number(match[1])+Number(match[2])))<.0001);}
  if(p.display.includes(' × ')&&p.display.endsWith(' = ?')){const [a,b]=p.display.split(' × ');assert.equal(Number(p.answer),Number(a)*parseInt(b));}
  if(n.id==='equivalent'){const f=p.display.match(/(\d+)\/(\d+) = \?\/(\d+)/);assert.equal(Number(p.answer)*Number(f[2]),Number(f[1])*Number(f[3]));}
@@ -29,6 +29,6 @@ const checks=evidence(reviewed,'count5',last+1000).checks;answer(reviewed,'count
 const hints=fresh();answer(hints,'add10',20,now,{hint:true});assert(!evidence(hints,'add10',now+30000).solid);assert.equal(model(hints,now+30000).rooted,0);
 const pace=fresh();answer(pace,'count5',8,now,{ms:40000});assert.equal(evidence(pace,'count5',now+30000).peak,1);pace.grade=5;assert.equal(evidence(pace,'count5',now+30000).peak,1);
 const comfortable=fresh();comfortable.untimed=true;answer(comfortable,'count5',8,now,{ms:120000});comfortable.untimed=false;assert.equal(evidence(comfortable,'count5',now+30000).peak,1);
-const normalized=normalize({...s,nova:{introduced:true,interests:['dinosaurs','<script>']}});assert.deepEqual(normalized.nova.interests,['dinosaurs']);assert.equal(normalized.attempts.length,s.attempts.length);assert(normalized.attempts.every(a=>a.node));
+const normalized=normalize({...s,nova:{introduced:true,interests:['dinosaurs','<script>']}});assert.deepEqual(normalized.nova,{introduced:true});assert.equal(normalized.attempts.length,s.attempts.length);assert(normalized.attempts.every(a=>a.node));
 const remote=structuredClone(normalized),local=structuredClone(normalized);answer(remote,'share',3,now);answer(local,'halves',3,now);const merged=mergeProgress(remote,local,normalized);assert.equal(merged.attempts.length,normalized.attempts.length+6);assert.equal(model(merged,now+30000).nodes.share.history.length,3);
-console.log(`Passed: ${samples} Nova questions; dependency graph, cross-world readiness, independent evidence, adaptive review, same-day replay protection, permanent earned discoveries, interests, cloud merge.`);
+console.log(`Passed: ${samples} Nova questions; dependency graph, cross-world readiness, independent evidence, adaptive review, same-day replay protection, permanent earned discoveries, legacy preference removal, cloud merge.`);

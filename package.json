@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
-    "test": "node tests/engine.test.mjs && node tests/cloud-state.test.mjs && node tests/constellation.test.mjs && node tests/interaction.test.mjs && node tests/carousel.test.mjs",
-    "build": "node scripts/bundle-supabase.mjs"
+    "test": "node tests/engine.test.mjs && node tests/cloud-state.test.mjs && node tests/constellation.test.mjs && node tests/interaction.test.mjs && node tests/carousel.test.mjs && node tests/nova-ai.test.mjs",
+    "build": "node scripts/bundle-supabase.mjs",
+    "build:ai": "node scripts/bundle-nova.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.116.0"

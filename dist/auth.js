@@ -9,6 +9,15 @@ export const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{
 let callbacks={},user=null,loading=null,loadingUser=null,epoch=0,stopCarousel=()=>{};
 export const progressStore=new CloudProgress(supabase,{onStatus:(kind,message)=>callbacks.onStatus?.(kind,message),onMerge:state=>callbacks.onMerge?.(state)});
 export const currentUser=()=>user;
+export async function askNova(kind,messages,signal){
+ const owner=user?.id;if(!owner)throw Error('Please log in again.');
+ if(kind==='report'&&!await progressStore.flush())throw Error('Please save your latest progress before creating an insight.');
+ if(signal?.aborted)throw new DOMException('Closed','AbortError');
+ const {data,error}=await supabase.auth.getSession();if(error||!data.session)throw Error('Please log in again.');
+ const response=await fetch(SUPABASE_URL+'/functions/v1/nova',{method:'POST',headers:{Authorization:'Bearer '+data.session.access_token,apikey:SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({kind,...(kind==='chat'?{messages}:{})}),signal:AbortSignal.any([signal||new AbortController().signal,AbortSignal.timeout(30000)])});
+ const result=await response.json();if(owner!==user?.id||signal?.aborted)throw new DOMException('Closed','AbortError');
+ if(!response.ok)throw Error(result.error||'Nova could not connect. Please try again.');return result;
+}
 function shell(content){stopCarousel();$('#modal')?.close();$('#app').innerHTML=`<main class="auth-layout">${carouselMarkup()}<section class="auth-side"><div class="auth-form-wrap">${content}</div><p class="auth-foot">A grown-up’s account. A child’s world of wonder.</p></section></main>`;stopCarousel=mountCarousel($('.auth-world'));}
 function message(text,error=false){const el=$('#auth-message');if(el){el.textContent=text;el.className=`auth-message ${error?'error':''}`;el.hidden=false;}}
 function friendly(error){if(/fetch|network/i.test(error?.message||''))return 'We couldn’t reach your account. Check your connection and try again.';return error?.message||'Something went wrong. Please try again.';}

@@ -1,8 +1,8 @@
-import {byNode,evidence,interestFor} from './constellation.js';
+import {byNode,evidence} from './constellation.js';
 const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const mix=a=>{for(let i=a.length-1;i>0;i--){const j=rand(0,i);[a[i],a[j]]=[a[j],a[i]];}return a};
 export function novaProblem(state,node,index=0,now=Date.now()){
- const n=byNode[node];if(!n)throw Error('Unknown discovery');const level=evidence(state,node,now).level,interest=interestFor(state,index),thing=interest.thing;
+ const n=byNode[node];if(!n)throw Error('Unknown discovery');const level=evidence(state,node,now).level,thing=['seeds','blocks','shells','stars'][n.world];
  let a,b,c,answer,prompt,display='',hint,visual=null,choices,form=index%3===0?'story':index%3===1?'visual':'symbolic';
  const cap=[5,8,10][level-1];
  switch(node){
@@ -29,5 +29,5 @@ export function novaProblem(state,node,index=0,now=Date.now()){
  }
  if(!choices){const set=new Set([answer]);let offset=1;while(set.size<4){set.add(answer+offset);if(answer-offset>=0&&set.size<4)set.add(answer-offset);offset++;}choices=[...set];}
  choices=mix([...new Set(choices)]);if(choices.length!==4)throw Error(`Choice collision in ${node}`);
- return {id:n.skill,node,level,form,answer,prompt,display,hint,visual,choices,interest:interest.id};
+ return {id:n.skill,node,level,form,answer,prompt,display,hint,visual,choices};
 }
