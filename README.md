@@ -27,7 +27,7 @@ An idea is **Taking root** after at least seven of the latest eight first attemp
 
 Each discovery can earn three permanent milestones: taking root, one delayed check, and three delayed checks. World story beats and visible light/path effects unlock at totals of 1, 6, and 12 milestones. Keepsakes and Nova's glow use earned evidence. Current readiness can fade while earned scenery and keepsakes remain. There are no paid unlocks, lost streak rewards, or compulsory extra sessions.
 
-The login/signup page cycles through all four existing landscapes every six seconds, with arrows, dots, keyboard navigation, touch swipes, and pause/play. It pauses on hover/focus and while the page is hidden; reduced-motion preferences disable automatic movement. Its timers are cleaned up on login and page replacement.
+The login/signup page cycles through all four existing landscapes every six seconds, with arrows, dots, keyboard navigation, and touch swipes. It keeps moving after arrow clicks and while hovered or focused, and pauses while the page is hidden; reduced-motion preferences disable automatic movement. Its timers are cleaned up on login and page replacement.
 
 ## Accounts and storage
 

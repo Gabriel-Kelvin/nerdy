@@ -17,12 +17,12 @@ try{
  assert.equal(track.style.transform,'translateX(-100%)');
  click('[data-carousel-prev]');settle();assert.equal(root.dataset.world,'3');assert.equal(track.style.transform,'translateX(-400%)');
  click('[data-carousel-world="1"]');settle();assert.equal(root.querySelector('#auth-world-name').textContent,'Canopy Grove');assert.equal(root.querySelector('[data-carousel-world="1"]').getAttribute('aria-pressed'),'true');
- click('[data-carousel-pause]');assert(![...timers.values()].some(t=>t.ms===6000));assert.equal(root.querySelector('[data-carousel-pause]').getAttribute('aria-label'),'Play world carousel');
- click('[data-carousel-next]');settle();assert.equal(root.dataset.world,'2');assert(![...timers.values()].some(t=>t.ms===6000));
+ assert.equal(root.querySelector('[data-carousel-pause]'),null);
+ click('[data-carousel-next]');settle();assert.equal(root.dataset.world,'2');assert([...timers.values()].some(t=>t.ms===6000));
  root.dispatchEvent(new win.KeyboardEvent('keydown',{key:'ArrowRight'}));settle();assert.equal(root.dataset.world,'3');
  const viewport=root.querySelector('.auth-world-viewport');viewport.dispatchEvent(new win.PointerEvent('pointerdown',{clientX:200,clientY:100}));viewport.dispatchEvent(new win.PointerEvent('pointerup',{clientX:100,clientY:105}));settle();assert.equal(root.dataset.world,'0');
- click('[data-carousel-pause]');root.dispatchEvent(new win.MouseEvent('mouseenter'));assert(![...timers.values()].some(t=>t.ms===6000));root.dispatchEvent(new win.MouseEvent('mouseleave'));assert([...timers.values()].some(t=>t.ms===6000));
+ root.dispatchEvent(new win.MouseEvent('mouseenter'));root.dispatchEvent(new win.FocusEvent('focusin'));assert([...timers.values()].some(t=>t.ms===6000));tick();assert.equal(root.dataset.world,'1');
  stop();assert.equal(timers.size,0);
  win.matchMedia=()=>({matches:true,addEventListener(){},removeEventListener(){}});stop=mountCarousel(root);assert(![...timers.values()].some(t=>t.ms===6000));click('[data-carousel-next]');assert.equal(root.dataset.world,'1');assert.equal(track.style.transition,'none');stop();
- console.log('Passed: four-world carousel auto-rotation, seamless wrap, manual controls, pause, keyboard, swipe, hover pause, reduced motion, and timer cleanup.');
+ console.log('Passed: four-world carousel auto-rotation, seamless wrap, manual controls, keyboard, swipe, continued autoplay, reduced motion, and timer cleanup.');
 }finally{stop?.();globalThis.setTimeout=originalSet;globalThis.clearTimeout=originalClear;await win.happyDOM.abort();}
