@@ -1,7 +1,8 @@
 import {fresh,SKILLS} from './engine.js';
+import {TREASURES} from './journey.js';
 const clone=x=>JSON.parse(JSON.stringify(x));
 const known=new Set(SKILLS.map(s=>s.id));
-const avatars=new Set(['🌱','🦊','🐸','🦉','🦋','🐉']);
+const avatars=new Set(TREASURES.map(t=>t.icon));
 const number=(x,min,max,fallback)=>Number.isFinite(x)?Math.max(min,Math.min(max,x)):fallback;
 export function normalize(raw){
  const data=raw&&typeof raw==='object'?raw:{};const s=fresh();
@@ -34,12 +35,12 @@ export function mergeProgress(remote,local,base){
 }
 
 export class CloudProgress {
- constructor(client,{onStatus=()=>{},onMerge=()=>{}}={}){this.client=client;this.onStatus=onStatus;this.onMerge=onMerge;this.userId=null;this.pending=null;this.base=null;this.revision=0;this.running=null;this.epoch=0;this.error=null;}
+ constructor(client,{onStatus=()=>{},onMerge=()=>{}}={}){this.client=client;this.onStatus=onStatus;this.onMerge=onMerge;this.userId=null;this.pending=null;this.base=null;this.revision=0;this.running=null;this.epoch=0;this.error=null;this.retryCount=0;}
  cacheKey(){return `nerdy-pending-v2:${this.userId}`;}
  cache(){if(!this.userId)return;try{if(this.pending)localStorage.setItem(this.cacheKey(),JSON.stringify({state:this.pending,base:this.base,revision:this.revision}));else localStorage.removeItem(this.cacheKey());}catch{this.onStatus('error','This browser cannot keep an offline copy. Please stay online until saving finishes.');}}
  async read(){const {data,error}=await this.client.from('learner_states').select('state,revision').eq('user_id',this.userId).maybeSingle();if(error)throw error;return data;}
  async open(userId,defaultState=fresh()){
-   clearTimeout(this.timer);const epoch=++this.epoch;this.running=null;this.userId=userId;this.pending=null;this.base=null;this.revision=0;this.error=null;
+   clearTimeout(this.timer);clearTimeout(this.retryTimer);this.retryCount=0;const epoch=++this.epoch;this.running=null;this.userId=userId;this.pending=null;this.base=null;this.revision=0;this.error=null;
    let cached;try{cached=JSON.parse(localStorage.getItem(this.cacheKey()))}catch{}
    const row=await this.read();if(epoch!==this.epoch)throw Error('Account changed.');
    const remote=normalize(row?.state||defaultState);this.revision=row?.revision||0;this.base=clone(remote);
@@ -49,7 +50,7 @@ export class CloudProgress {
    if(this.pending){this.cache();await this.flush();value=this.pending||this.base;}
    this.onStatus(this.pending?'error':'saved',this.pending?'Waiting to save':'Saved to your account');return clone(value);
  }
- schedule(state){if(!this.userId)throw Error('Sign in before saving.');this.pending=clone(state);this.error=null;this.cache();this.onStatus('saving','Saving your progress…');clearTimeout(this.timer);this.timer=setTimeout(()=>{void this.flush()},250);}
+ schedule(state){clearTimeout(this.retryTimer);this.retryCount=0;if(!this.userId)throw Error('Sign in before saving.');this.pending=clone(state);this.error=null;this.cache();this.onStatus('saving','Saving your progress…');clearTimeout(this.timer);this.timer=setTimeout(()=>{void this.flush()},250);}
  async loadSaved(){
    clearTimeout(this.timer);if(this.running)await this.running;const epoch=this.epoch;const row=await this.read();if(epoch!==this.epoch)throw Error('Account changed.');this.pending=null;this.base=normalize(row?.state);this.revision=row?.revision||0;this.error=null;this.cache();this.onMerge(clone(this.base));this.onStatus('saved','Saved to your account');return clone(this.base);
  }
@@ -61,17 +62,19 @@ export class CloudProgress {
        const sent=clone(this.pending),oldBase=clone(this.base);
        this.onStatus('saving','Saving your progress…');
        try{
-         const {data,error}=await this.client.rpc('save_learner_state',{p_state:sent,p_revision:this.revision});
+         const request=this.client.rpc('save_learner_state',{p_state:sent,p_revision:this.revision});
+         let timeout;const deadline=new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('The connection took too long.')),12000);timeout.unref?.();});
+         const {data,error}=await Promise.race([request.abortSignal?request.abortSignal(AbortSignal.timeout(12000)):request,deadline]).finally(()=>clearTimeout(timeout));
          if(epoch!==this.epoch)return false;
          if(error){if(error.code==='40001'&&conflicts++<3){const row=await this.read();if(epoch!==this.epoch)return false;const merged=mergeProgress(row?.state,this.pending,oldBase);this.base=normalize(row?.state);this.revision=row?.revision||0;this.pending=merged;this.onMerge(clone(merged));this.cache();continue;}throw error;}
          const row=data?.[0];if(!row)throw Error('The server did not confirm your save.');
-         this.base=sent;this.revision=row.revision;
+         this.base=sent;this.revision=row.revision;this.retryCount=0;this.error=null;
          if(JSON.stringify(this.pending)===JSON.stringify(sent))this.pending=null;
          this.cache();
-       }catch(e){if(epoch!==this.epoch)return false;this.error=e;this.onStatus('error',e.code==='RESET_CONFLICT'?e.message:'Not saved yet. Check your connection and retry.');return false;}
+       }catch(e){if(epoch!==this.epoch)return false;this.error=e;this.onStatus('error',e.code==='RESET_CONFLICT'?e.message:'Progress is kept on this device. Reconnecting to your account…');if(e.code!=='RESET_CONFLICT'&&this.retryCount<5){const delay=Math.min(30000,1500*2**this.retryCount++);clearTimeout(this.retryTimer);this.retryTimer=setTimeout(()=>{if(epoch===this.epoch)void this.flush();},delay);this.retryTimer.unref?.();}return false;}
      }
      if(epoch===this.epoch)this.onStatus('saved','Saved to your account');return true;
    })().finally(()=>{if(epoch===this.epoch)this.running=null});return this.running;
  }
- close(){clearTimeout(this.timer);this.cache();this.epoch++;this.running=null;this.userId=null;this.pending=null;this.base=null;this.revision=0;}
+ close(){clearTimeout(this.timer);clearTimeout(this.retryTimer);this.cache();this.epoch++;this.running=null;this.userId=null;this.pending=null;this.base=null;this.revision=0;}
 }

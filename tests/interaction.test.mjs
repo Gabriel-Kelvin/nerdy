@@ -16,7 +16,7 @@ await mkdir(new URL('../work/',import.meta.url),{recursive:true});
 let code=await readFile(appUrl,'utf8');
 code=code.replace(/import \{([^}]+)\} from '\.\/auth.js';/,(_,names)=>`const {${names}}=globalThis.__nerdyAuth;`);
 code=code.replace(/from '(\.\/[^']+)'/g,(_,path)=>`from '${new URL(path,appUrl).href}'`);
-await writeFile(tmp,code+'\nexport {state,lesson,startNode};\n');
+await writeFile(tmp,code+'\nexport {state,lesson,startNode,questionClock};\n');
 try{
  const app=await import(tmp.href+'?'+Date.now());
  const $=s=>document.querySelector(s);
@@ -34,23 +34,24 @@ try{
  click('[data-world="0"]');click('[data-node="count5"]');click('#try-node');
  const chooseCorrect=()=>click(`[data-answer="${app.lesson.q.choices.indexOf(app.lesson.q.answer)}"]`);
  for(let i=0;i<6;i++){
-  assert($('.nova-speech'));assert(!('interest' in app.lesson.q));
+  assert($('.coach-stage'));assert($('#question-timer'));assert(!('interest' in app.lesson.q));
   if(i===0){click(`[data-answer="${app.lesson.q.choices.findIndex(x=>x!==app.lesson.q.answer)}"]`);assert.equal(app.state.attempts.length,1);}
   if(i===1)click('#hint-button');
   chooseCorrect();assert.equal(app.state.attempts.length,i+1);click('#next-question');
  }
  assert(app.lesson.done);assert.equal(app.state.sessions.length,1);assert.equal(app.state.sessions[0].correct,4);assert.equal(app.state.seeds,12);
  assert.equal(model(app.state).nodes.count5.solid,false);assert.equal(app.state.attempts[0].ok,false);assert.equal(app.state.attempts[1].hint,true);
- click('#back-home');click('[data-node="count20"]');assert(!$('#try-node'));click('[data-close]');click('[data-node="count5"]');click('#try-node');
+ assert.match($('.treasure-unlocks').textContent,/Ember the fox/);assert.equal(model(app.state).nodes.count5.stars,1);click('#back-home');click('[data-node="count20"]');click('#try-node');assert.equal(app.lesson.node,'count20');click('#exit-lesson');click('#leave');click('[data-node="count5"]');click('#try-node');
  for(let i=0;i<6;i++){chooseCorrect();click('#next-question');}
  assert(model(app.state).nodes.count5.solid);assert.equal(model(app.state).nodes.count5.mastered,false);assert.equal(model(app.state).worlds[0].unlocked,1);
- assert.match($('.finish-discoveries').textContent,/Firefly bridge/);click('#back-home');click('[data-node="count20"]');click('#try-node');assert.equal(app.lesson.node,'count20');click('#exit-lesson');click('#leave');
+ assert.equal(model(app.state).nodes.count5.stars,3);click('#back-home');click('[data-node="count20"]');click('#try-node');assert.equal(app.lesson.node,'count20');click('#exit-lesson');click('#leave');
  click('[data-landmark="0"]');assert.match($('#modal').textContent,/yours to keep/);click('[data-close]');
  click('[data-nav="collection"]');assert.equal(document.querySelectorAll('[data-equip]:not(:disabled)').length,2);click('[data-equip="🦊"]');assert.equal(app.state.avatar,'🦊');
  click('[data-nav="parent"]');assert.equal(document.querySelectorAll('.evidence tbody tr').length,24);
- click('[data-action="settings"]');$('#name').value='Nova Explorer';$('#grade').value='5';$('#pace').value='untimed';click('#save-settings');
+ click('[data-action="settings"]');$('#name').value='Nova Explorer';$('#grade').value='5';assert(!$('#pace')); click('#save-settings');
  assert.equal(app.state.grade,5);assert.equal(model(app.state).worlds[0].unlocked,1);
  click('[data-action="account"]');await new Promise(resolve=>setTimeout(resolve,0));assert.match($('#journals').textContent,/No saved journals/);click('#account-close');
  assert.equal(saved.at(-1).name,'Nova Explorer');assert(!('interests' in saved.at(-1).nova));assert.equal(saved.at(-1).attempts.length,12);
+ app.startNode('count20');const beforeTimeout=app.state.attempts.length;app.questionClock.elapsed=app.lesson.q.timeLimit*1000;app.questionClock.tick();assert.equal(app.state.attempts.length,beforeTimeout+1);assert.equal(app.state.attempts.at(-1).timedOut,true);assert.equal(app.state.attempts.at(-1).ok,false);chooseCorrect();assert.equal(app.state.attempts.length,beforeTimeout+1);assert.equal(app.lesson.correct,0);click('#exit-lesson');click('#leave');
  console.log('Passed: Nova introduction without interests prompt, removed interests, four worlds, sequential level guards, dark mode, temporary chat opening, first-attempt scoring, hints/retries, earned landmarks, keepsakes, settings, journal and save interactions.');
 }finally{await win.happyDOM.abort();await unlink(tmp);delete globalThis.__nerdyAuth;}

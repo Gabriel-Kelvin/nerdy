@@ -1,9 +1,10 @@
 import {DAY,SKILLS,dateKey} from './engine.js';
+import {bestStars} from './journey.js';
 export const WORLDS=[
- {name:'Little Meadow',tag:'ONE SMALL STEP',desc:'Count the seeds. Find a path. Let new ideas bloom.',color:'#aee798',ink:'#285849',asset:'meadow.png',landmarks:['Firefly bridge','Daisy windmill','The wishing tree'],story:['Your first clear ideas light a bridge over the stream.','Steady practice turns the windmill. New paths lead onward.','Ideas remembered on different days bring the wishing tree into bloom.']},
- {name:'Canopy Grove',tag:'BUILD ON WHAT YOU KNOW',desc:'Bundle, group, and climb toward the treetops.',color:'#83dbc5',ink:'#17594e',asset:'canopy.png',landmarks:['Lantern trail','Sky elevator','Treetop library'],story:['Your number patterns light the way into the canopy.','Connected ideas lift a new platform into the branches.','Remembered ideas open the treetop library.']},
- {name:'Wonder Lagoon',tag:'A WHOLE SEA OF PIECES',desc:'Share fairly. Look deeper. Discover the whole.',color:'#8cdef5',ink:'#165673',asset:'lagoon.png',landmarks:['Pearl stepping stones','Coral arch','Glass reef'],story:['Your sharing discoveries reveal a trail of pearls.','Parts and wholes come together beneath a coral arch.','Remembered ideas illuminate the glass reef.']},
- {name:'Starlight Summit',tag:'WHERE NOVA BEGAN',desc:'Follow tiny details toward enormous discoveries.',color:'#c9b8ff',ink:'#534785',asset:'summit.png',landmarks:['Comet trail','Crystal telescope','Aurora observatory'],story:['This is where Nova first sparked. Your ideas light a comet trail.','Place value and precision focus the crystal telescope.','Remembered ideas fill the observatory with an aurora.']}
+ {name:'Little Meadow',tag:'ONE SMALL STEP',desc:'Count the seeds. Find a path. Let new ideas bloom.',color:'#aee798',ink:'#285849',asset:'meadow.png',landmarks:['Firefly bridge','Daisy windmill','The wishing tree'],story:['Your first clear ideas light a bridge over the stream.','Steady practice turns the windmill. New paths lead onward.','All 18 meadow stars bring the wishing tree into bloom.']},
+ {name:'Canopy Grove',tag:'BUILD ON WHAT YOU KNOW',desc:'Bundle, group, and climb toward the treetops.',color:'#83dbc5',ink:'#17594e',asset:'canopy.png',landmarks:['Lantern trail','Sky elevator','Treetop library'],story:['Your number patterns light the way into the canopy.','Connected ideas lift a new platform into the branches.','All 18 canopy stars open the treetop library.']},
+ {name:'Wonder Lagoon',tag:'A WHOLE SEA OF PIECES',desc:'Share fairly. Look deeper. Discover the whole.',color:'#8cdef5',ink:'#165673',asset:'lagoon.png',landmarks:['Pearl stepping stones','Coral arch','Glass reef'],story:['Your sharing discoveries reveal a trail of pearls.','Parts and wholes come together beneath a coral arch.','All 18 lagoon stars illuminate the glass reef.']},
+ {name:'Starlight Summit',tag:'WHERE NOVA BEGAN',desc:'Follow tiny details toward enormous discoveries.',color:'#c9b8ff',ink:'#534785',asset:'summit.png',landmarks:['Comet trail','Crystal telescope','Aurora observatory'],story:['This is where Nova first sparked. Your ideas light a comet trail.','Place value and precision focus the crystal telescope.','All 18 summit stars fill the observatory with an aurora.']}
 ];
 // The ordered journey gates access; prerequisite links still guide learning and review.
 const n=(id,name,skill,world,grade,prereqs,icon)=>({id,name,skill,world,grade,prereqs,icon});
@@ -39,7 +40,7 @@ export function evidence(state,id,now=Date.now()){
 export function model(state,now=Date.now()){
  const nodes=Object.fromEntries(NODES.map(n=>[n.id,{...n,...evidence(state,n.id,now)}]));
  let firstIncomplete=null;
- NODES.forEach((node,index)=>{const n=nodes[node.id];n.order=index+1;n.previous=NODES[index-1]?.id||null;n.blockedBy=firstIncomplete;n.unlocked=firstIncomplete===null;n.complete=n.peak>0;if(!n.complete&&!firstIncomplete)firstIncomplete=n.id;});
+ NODES.forEach((node,index)=>{const n=nodes[node.id];n.order=index+1;n.previous=NODES[index-1]?.id||null;n.blockedBy=firstIncomplete;n.unlocked=firstIncomplete===null;n.stars=bestStars(state,n.id,n.peak);n.complete=n.stars>0;if(!n.complete&&!firstIncomplete)firstIncomplete=n.id;});
  for(const n of Object.values(nodes)){
   n.support=NODES.filter(x=>x.prereqs.includes(n.id)).reduce((v,x)=>Math.max(v,nodes[x.id].confidence*.35),0);
   n.helps=NODES.filter(x=>x.prereqs.includes(n.id)&&nodes[x.id].fragile).map(x=>x.name);
@@ -57,16 +58,16 @@ export function model(state,now=Date.now()){
   if(n.solid&&!n.due&&!n.fragile)score=-10;
   return {n,score};
  }).sort((a,b)=>b.score-a.score);
- const chosen=ranked[0]?.n||nodes.count5;
+ const chosen=firstIncomplete?nodes[firstIncomplete]:(ranked[0]?.n||nodes.count5);
  const reason=chosen.helps.length&&!chosen.solid?`A little ${chosen.name.toLowerCase()} can help with ${chosen.helps[0].toLowerCase()}.`:chosen.due?'A short revisit will help this idea last.':chosen.fragile?'Let’s try a smaller step with a helpful picture.':chosen.support>.2&&!chosen.history.length?'Your connected ideas suggest this is worth a quick look.':chosen.prereqs.length&&chosen.ready?`Your ${nodes[chosen.prereqs[0]].name.toLowerCase()} ideas open this path.`:'A little discovery at your pace.';
- const worlds=WORLDS.map((w,i)=>{const ns=Object.values(nodes).filter(n=>n.world===i),milestones=ns.reduce((s,n)=>s+n.peak,0);return {...w,nodes:ns,milestones,unlocked:[1,6,12].filter(t=>milestones>=t).length,remembered:ns.filter(n=>n.mastered).length};});
+ const worlds=WORLDS.map((w,i)=>{const ns=Object.values(nodes).filter(n=>n.world===i),milestones=ns.reduce((s,n)=>s+n.stars,0);return {...w,nodes:ns,milestones,unlocked:[1,9,18].filter(t=>milestones>=t).length,remembered:ns.filter(n=>n.mastered).length};});
  const earned=Object.values(nodes).filter(n=>n.earned).length,rooted=Object.values(nodes).filter(n=>n.peak>0).length;
- return {nodes,worlds,recommendation:chosen,reason,earned,rooted,glow:clamp((rooted+earned*2)/(NODES.length*3),0,1),fringe:Object.values(nodes).filter(n=>n.ready&&!n.solid),ranked};
+ return {nodes,worlds,totalStars:Object.values(nodes).reduce((s,n)=>s+n.stars,0),completed:Object.values(nodes).filter(n=>n.complete).length,recommendation:chosen,reason,earned,rooted,glow:clamp((rooted+earned*2)/(NODES.length*3),0,1),fringe:Object.values(nodes).filter(n=>n.ready&&!n.solid),ranked};
 }
 export function nodeForSkill(state,skill,now=Date.now()){return model(state,now).ranked.find(x=>x.n.skill===skill)?.n.id||'count5';}
-export function recordNode(state,{node,ok,hint,ms,form,review,sessionId,now=Date.now()}){
+export function recordNode(state,{node,ok,hint,ms,form,review,sessionId,level,timeLimit,timedOut=false,now=Date.now()}){
  const n=byNode[node];if(!n)throw Error('Unknown discovery');const s=evidence(state,node,now);
- const attempt={eventId:crypto.randomUUID(),id:n.skill,node,ok:!!ok,hint:!!hint,ms:Math.max(0,Math.round(ms)),at:now,level:s.level,form,review:!!review,recall:!!review,sessionId,untimed:!!state.untimed,fluencyLimitMs:state.grade<=1?45000:30000};state.attempts.push(attempt);return attempt;
+ const attempt={eventId:crypto.randomUUID(),id:n.skill,node,ok:!!ok,hint:!!hint,ms:Math.max(0,Math.round(ms)),at:now,level:level||s.level,timedOut:!!timedOut,form,review:!!review,recall:!!review,sessionId,untimed:timeLimit?false:!!state.untimed,fluencyLimitMs:timeLimit?timeLimit*1000:(state.grade<=1?45000:30000)};state.attempts.push(attempt);return attempt;
 }
 export function novaLine(kind,{index=0}={}){const lines={welcome:['I’m Nova, your AI learning spark. Let’s find an interesting idea.','My glow grows with ideas you can use and remember.','I began at Starlight Summit. Every world has something to discover.'],correct:['You worked that one out. A new connection!','That answer fits. Can you picture why?','Your independent thinking made a little light.'],retry:['You stayed with it and tried again. That matters.','You changed your answer after a clue. That’s useful thinking.','A different try helped you find it.'],hint:['You used a clue to move forward. That’s a learning tool.','Let’s use the picture and build this together.'],wrong:['Interesting—let’s check it with a picture or a smaller step.','Let’s test another idea. A mistake gives us something to explore.'],review:['A tiny return trip! Let’s see what stayed with you.','One familiar idea, a new little quest.','Time to give an old discovery a fresh sparkle.']};return (lines[kind]||lines.welcome)[index%(lines[kind]||lines.welcome).length];}
 export const EMOTIONAL_REDIRECT='I’m an AI learning spark, so I can help with math, but I’m not a person who can care for you. Please tell a parent, teacher, or another grown-up you trust how you’re feeling. You can take a break here whenever you want.';
