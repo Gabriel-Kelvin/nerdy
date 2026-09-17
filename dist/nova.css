@@ -10,3 +10,9 @@
 @media(max-width:620px){.nova-kicker,.nova-world-title .eyebrow,.world-tabs button,.nova-signature,.nova-signature small,.nova-quest .nova-kicker,.landmark small,.map-caption,.map-caption button,.constellation-key{font-size:12px}.map-discovery{width:44px;height:44px}.map-discovery small{font-size:12px;width:84px;top:47px}.nova-world{height:470px}.nova-speech p{font-size:16px}.landmark strong{font-size:14px}}
 @media(max-width:620px){.topstats .stat .small{display:none}.nova-info{min-width:44px;min-height:44px}}
 @media(max-width:380px){.topstats{gap:7px}.topstats .stat[title^="Days"]{display:none}.nova-header .nova-avatar{width:36px;height:36px}.dialog-actions{flex-wrap:wrap}.map-caption{flex-wrap:wrap;bottom:12px}.map-caption span{font-size:12px}}
+.nova-avatar img{animation:none}
+.auth-world-copy:before{display:none}
+.map-discovery.is-locked{background:#263b4be6;color:#d4dce4;border-color:#9cabb3;box-shadow:none;font-size:16px}
+.constellation-node.is-locked{border-color:#485879;box-shadow:none;color:#a2b1c6}
+.discovery-card.stage-locked .discovery-icon{background:#e4e9e8}
+.map-discovery:hover{scale:1}

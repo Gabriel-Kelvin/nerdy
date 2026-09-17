@@ -4,7 +4,7 @@ Start locally with `npm start`, then visit http://127.0.0.1:5173. The browser ap
 
 ## Nova and the four worlds
 
-Nova is one star-spark guide across the map, questions, constellation, and celebrations. Nova first appears at Starlight Summit, wears a leaf crown in Canopy Grove and fins in Wonder Lagoon, and gains glow/color from earned learning evidence. Guidance uses the adaptive model and reviewed phrases, not a generative chat. There is no personal-message input or history. A personal-concern choice redirects the learner to a trusted grown-up. Up to three optional interests tailor question objects; these preferences can be changed or cleared.
+Nova is one star-spark guide in dedicated panels, questions, constellation, and celebrations. Nova first appears at Starlight Summit, wears a leaf crown in Canopy Grove and fins in Wonder Lagoon, and gains glow/color from earned learning evidence. Guidance uses the adaptive model and reviewed phrases, not a generative chat. There is no personal-message input or history. A personal-concern choice redirects the learner to a trusted grown-up. Up to three optional interests tailor question objects; these preferences can be changed or cleared from the map. Signup does not ask an interests question. Nova stays still and is never overlaid on the level map.
 
 The four illustrated landscapes share 24 connected discoveries:
 
@@ -15,7 +15,7 @@ The four illustrated landscapes share 24 connected discoveries:
 | Wonder Lagoon | Equal sharing; division; halves and quarters; naming fractions; equivalent fractions; like-denominator addition |
 | Starlight Summit | Adding lengths; metres to centimetres; tenths; decimal place value; decimal addition; larger multiplication |
 
-All discoveries remain freely explorable. A shared prerequisite graph recommends an appropriate next step across worlds. Direct fluent evidence in prerequisites opens their successors; strong successor evidence can suggest a prerequisite check but never certifies it. Fragile related skills influence the next recommendation. The visible constellation shows these connections.
+The 24 levels unlock in order across Meadow, Canopy, Lagoon, and Summit. A level opens only when every preceding level has earned its Taking root milestone through independent fluent answers. Earned access persists after breaks; delayed recall remains separate. All four worlds can be previewed, while locked levels explain what to finish first. Lesson entry, recommendations, and the constellation share this gate. Existing advanced evidence is preserved but cannot bypass an unfinished earlier level. The prerequisite graph continues to guide readiness and review among accessible levels.
 
 ## Evidence and adaptive review
 
@@ -26,6 +26,8 @@ An idea is **Taking root** after at least seven of the latest eight first attemp
 **Remembered** additionally requires three successful delayed checks, strong current first-attempt evidence, and a recall estimate above the current-strength threshold. A review checks three independent answers; checks must be at least 18 hours apart. The heuristic forgetting curve uses time since practice and a stability value. Passing reviews increases stability, with comfortable response speed influencing the amount; failing reduces stability and the current recall-check count. Recommendations prioritize due reviews and fragile ideas. This is adaptive scheduling, not fixed 1/3/7-day progression and not a measured probability of retention.
 
 Each discovery can earn three permanent milestones: taking root, one delayed check, and three delayed checks. World story beats and visible light/path effects unlock at totals of 1, 6, and 12 milestones. Keepsakes and Nova's glow use earned evidence. Current readiness can fade while earned scenery and keepsakes remain. There are no paid unlocks, lost streak rewards, or compulsory extra sessions.
+
+The login/signup page cycles through all four existing landscapes every six seconds, with arrows, dots, keyboard navigation, touch swipes, and pause/play. It pauses on hover/focus and while the page is hidden; reduced-motion preferences disable automatic movement. Its timers are cleaned up on login and page replacement.
 
 ## Accounts and storage
 

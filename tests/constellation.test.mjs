@@ -18,8 +18,10 @@ for(const n of NODES)for(let level=0;level<3;level++)for(let i=0;i<60;i++){
  samples++;
 }
 const s=fresh();assert(model(s).nodes.count5.ready);assert(!model(s).nodes.multiply.ready);
-answer(s,'count5');assert(evidence(s,'count5',now+10000).solid);assert.equal(evidence(s,'count5',now+10000).mastered,false);assert(model(s,now+10000).nodes.add10.ready);
-for(const id of ['count20','add10','groups'])answer(s,id,8,now+10000);assert(!model(s,now+20000).nodes.multiply.ready);answer(s,'tens',8,now+20000);assert(model(s,now+30000).nodes.multiply.ready);assert(!model(s,now+30000).nodes.multiply.mastered);
+answer(s,'count5');assert(evidence(s,'count5',now+10000).solid);assert.equal(evidence(s,'count5',now+10000).mastered,false);assert(model(s,now+10000).nodes.count20.ready);assert(!model(s,now+10000).nodes.add10.unlocked);
+for(const id of ['count20','compare','add10','subtract10','shapes','hundreds','add100','groups'])answer(s,id,8,now+10000);assert(!model(s,now+20000).nodes.multiply.ready);answer(s,'tens',8,now+20000);assert(model(s,now+30000).nodes.multiply.ready);assert(!model(s,now+30000).nodes.multiply.mastered);
+const journey=fresh();for(let i=0;i<NODES.length;i++){const m=model(journey,now+10000);assert.equal(m.recommendation.id,NODES[i].id);assert.equal(Object.values(m.nodes).filter(n=>n.unlocked).length,i+1);answer(journey,NODES[i].id);assert.equal(model(journey,now+10000).nodes[NODES[i].id].complete,true);}assert.equal(Object.values(model(normalize(journey),now+100*DAY).nodes).filter(n=>n.unlocked).length,24);
+const legacyAdvanced=fresh();answer(legacyAdvanced,'multiply');assert.equal(model(legacyAdvanced,now+10000).recommendation.id,'count5');assert.equal(model(legacyAdvanced,now+10000).nodes.multiply.unlocked,false);
 const reviewed=fresh();answer(reviewed,'count5');let at=now+DAY;
 for(let d=0;d<3;d++){assert(evidence(reviewed,'count5',at).due);answer(reviewed,'count5',3,at,{review:true,sessionId:'review-'+d});at=evidence(reviewed,'count5',at+5000).reviewAt+DAY;}
 const last=reviewed.attempts.at(-1).at;assert(evidence(reviewed,'count5',last+1000).mastered);assert.equal(evidence(reviewed,'count5',last+100*DAY).mastered,false);assert(evidence(reviewed,'count5',last+100*DAY).earned);assert(model(reviewed,last+100*DAY).worlds[0].unlocked>=1);

@@ -2,13 +2,14 @@ import {createClient} from './vendor/supabase.js';
 import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY} from './supabase-config.js';
 import {fresh} from './engine.js';
 import {CloudProgress,normalize} from './cloud-state.js';
+import {carouselMarkup,mountCarousel} from './auth-carousel.js';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=s=>document.querySelector(s);
 export const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'nerdy-auth-v1'}});
-let callbacks={},user=null,loading=null,loadingUser=null,epoch=0;
+let callbacks={},user=null,loading=null,loadingUser=null,epoch=0,stopCarousel=()=>{};
 export const progressStore=new CloudProgress(supabase,{onStatus:(kind,message)=>callbacks.onStatus?.(kind,message),onMerge:state=>callbacks.onMerge?.(state)});
 export const currentUser=()=>user;
-function shell(content){$('#modal')?.close();$('#app').innerHTML=`<main class="auth-layout"><section class="auth-world"><img src="worlds/summit.png" alt="Starlight Summit, where Nova begins"><div class="auth-brand"><span class="brandmark">n</span> nerdy</div><div class="auth-world-copy"><span class="eyebrow">A WORLD WORTH COMING BACK TO</span><h1>Little ideas.<br>A brighter universe.</h1><p>Your explorer, their growing powers, and every little treasure — together in one account.</p></div></section><section class="auth-side"><div class="auth-form-wrap">${content}</div><p class="auth-foot">A grown-up’s account. A child’s world of wonder.</p></section></main>`;}
+function shell(content){stopCarousel();$('#modal')?.close();$('#app').innerHTML=`<main class="auth-layout">${carouselMarkup()}<section class="auth-side"><div class="auth-form-wrap">${content}</div><p class="auth-foot">A grown-up’s account. A child’s world of wonder.</p></section></main>`;stopCarousel=mountCarousel($('.auth-world'));}
 function message(text,error=false){const el=$('#auth-message');if(el){el.textContent=text;el.className=`auth-message ${error?'error':''}`;el.hidden=false;}}
 function friendly(error){if(/fetch|network/i.test(error?.message||''))return 'We couldn’t reach your account. Check your connection and try again.';return error?.message||'Something went wrong. Please try again.';}
 export function showAuth(mode='login',notice=''){
@@ -35,7 +36,7 @@ async function openAccount(session){
  const turn=++epoch;loading=(async()=>{
    loadingScreen();const {data,error}=await supabase.auth.getUser();if(error||!data.user)throw error||Error('Please log in again.');if(turn!==epoch)return;
    const account=data.user;const initial=fresh();initial.name=account.user_metadata?.explorer_name?.slice(0,24)||'Explorer';
-   const saved=await progressStore.open(account.id,initial);if(turn!==epoch)return;user=account;callbacks.onReady?.(normalize(saved));
+   const saved=await progressStore.open(account.id,initial);if(turn!==epoch)return;user=account;stopCarousel();callbacks.onReady?.(normalize(saved));
  })().catch(err=>{if(turn!==epoch)return;shell(`<h1>Your world is safe.</h1><p class="auth-intro">We couldn’t load your saved progress. ${esc(friendly(err))}</p><button class="primary" id="retry-account">Try again</button><button class="text-button auth-forgot" id="return-login">Back to log in</button>`);$('#retry-account').onclick=()=>void openAccount(session);$('#return-login').onclick=async()=>{await supabase.auth.signOut({scope:'local'});showAuth()};}).finally(()=>{if(turn===epoch){loading=null;loadingUser=null;}});return loading;
 }
 export async function boot(options){

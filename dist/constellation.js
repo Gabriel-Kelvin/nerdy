@@ -5,7 +5,7 @@ export const WORLDS=[
  {name:'Wonder Lagoon',tag:'A WHOLE SEA OF PIECES',desc:'Share fairly. Look deeper. Discover the whole.',color:'#8cdef5',ink:'#165673',asset:'lagoon.png',landmarks:['Pearl stepping stones','Coral arch','Glass reef'],story:['Your sharing discoveries reveal a trail of pearls.','Parts and wholes come together beneath a coral arch.','Remembered ideas illuminate the glass reef.']},
  {name:'Starlight Summit',tag:'WHERE NOVA BEGAN',desc:'Follow tiny details toward enormous discoveries.',color:'#c9b8ff',ink:'#534785',asset:'summit.png',landmarks:['Comet trail','Crystal telescope','Aurora observatory'],story:['This is where Nova first sparked. Your ideas light a comet trail.','Place value and precision focus the crystal telescope.','Remembered ideas fill the observatory with an aurora.']}
 ];
-// Prerequisite links guide recommendations; exploration is never locked.
+// The ordered journey gates access; prerequisite links still guide learning and review.
 const n=(id,name,skill,world,grade,prereqs,icon)=>({id,name,skill,world,grade,prereqs,icon});
 export const NODES=[
  n('count5','Count to 5','count',0,0,[],'●'),n('count20','Count to 20','count',0,0,['count5'],'••'),n('compare','Compare numbers','count',0,0,['count20'],'≷'),n('add10','Add within 10','add',0,0,['count5'],'+'),n('subtract10','Subtract within 10','subtract',0,0,['count5'],'−'),n('shapes','Shape detectives','geometry',0,0,[],'△'),
@@ -39,13 +39,15 @@ export function evidence(state,id,now=Date.now()){
 }
 export function model(state,now=Date.now()){
  const nodes=Object.fromEntries(NODES.map(n=>[n.id,{...n,...evidence(state,n.id,now)}]));
+ let firstIncomplete=null;
+ NODES.forEach((node,index)=>{const n=nodes[node.id];n.order=index+1;n.previous=NODES[index-1]?.id||null;n.blockedBy=firstIncomplete;n.unlocked=firstIncomplete===null;n.complete=n.peak>0;if(!n.complete&&!firstIncomplete)firstIncomplete=n.id;});
  for(const n of Object.values(nodes)){
   n.support=NODES.filter(x=>x.prereqs.includes(n.id)).reduce((v,x)=>Math.max(v,nodes[x.id].confidence*.35),0);
   n.helps=NODES.filter(x=>x.prereqs.includes(n.id)&&nodes[x.id].fragile).map(x=>x.name);
-  n.ready=n.prereqs.every(id=>nodes[id].solid&&nodes[id].recall>=.72);
-  n.stage=n.mastered?'Remembered':n.due||n.fragile?'Rekindle':n.solid?'Taking root':n.history.length?'Growing':n.ready?'Ready to explore':'A new horizon';
+  n.ready=n.unlocked&&n.prereqs.every(id=>nodes[id].solid&&nodes[id].recall>=.72);
+  n.stage=!n.unlocked?'Locked':n.mastered?'Remembered':n.due||n.fragile?'Rekindle':n.solid?'Taking root':n.history.length?'Growing':n.ready?'Ready to explore':'A new horizon';
  }
- const ranked=Object.values(nodes).map(n=>{
+ const ranked=Object.values(nodes).filter(n=>n.unlocked).map(n=>{
   const eligible=n.grade<=state.grade;let score=-100;
   if(n.helps.length&&!n.solid&&n.history.length)score=101;
   else if(n.due)score=110+(1-n.recall)*20;
