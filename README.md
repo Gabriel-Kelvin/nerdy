@@ -53,3 +53,10 @@ The Supabase nova Edge Function verifies the access token against Auth and reads
 ## Play revision validation
 
 Research notes: docs/play-design.md. Tests include 3,600 seeded questions across all 24 levels and six positions, identical difficulty across grades, ten matching illustrations, two distinct worked clues, exact star boundaries, sequential unlocking, best-score preservation, all treasure goals, timer pause/expiry, no double scoring after timeout, and automatic save recovery. Live Supabase verification exercised six consecutive attempt saves, session save, a fresh read confirming one-star unlock, AI hint and wrong-answer coaching, invalid-question rejection and parent-report evidence.
+
+
+## GitHub and cloud hosting
+
+The browser app is a static site in `dist/`, deployed on Vercel with `vercel.json`. Supabase continues to provide email/password authentication, account-owned learning progress, private journal storage, and the Nova usage counter. Nova's authenticated AI API runs on Render from `render/server.mjs`; it uses the same question validation and child-safe response rules as the Supabase Edge Function. `supabase/render-backend.sql` grants an authenticated account access only to its own daily quota claim.
+
+The Render service uses Node, `npm ci` for its build command, and `node render/server.mjs` for its start command. Configure `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `GROQ_API_KEY`, and `ALLOWED_ORIGINS` as Render environment variables. The Groq key belongs only on the backend. The Vercel project builds with `npm run build` and publishes `dist/`.

@@ -5,3 +5,6 @@ node_modules/
 .sites-runtime/
 work/
 *.zip
+
+.vercel/
+*.tar.gz
