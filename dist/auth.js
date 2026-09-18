@@ -14,7 +14,7 @@ export async function askNova(kind,messages,signal){
  if(kind==='report'&&!await progressStore.flush())throw Error('Please save your latest progress before creating an insight.');
  if(signal?.aborted)throw new DOMException('Closed','AbortError');
  const {data,error}=await supabase.auth.getSession();if(error||!data.session)throw Error('Please log in again.');
- const response=await fetch('https://nerdy-nova-api.onrender.com/api/nova',{method:'POST',headers:{Authorization:'Bearer '+data.session.access_token,apikey:SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({kind,...(kind==='chat'?{messages}:kind==='coach'?{context:messages}:{})}),signal:AbortSignal.any([signal||new AbortController().signal,AbortSignal.timeout(30000)])});
+ const response=await fetch('https://nerdy-nova-api.onrender.com/api/nova',{method:'POST',headers:{Authorization:'Bearer '+data.session.access_token,apikey:SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({kind,...(kind==='chat'?{messages}:kind==='coach'?{context:messages}:{})}),signal:AbortSignal.any([signal||new AbortController().signal,AbortSignal.timeout(90000)])});
  const result=await response.json();if(owner!==user?.id||signal?.aborted)throw new DOMException('Closed','AbortError');
  if(!response.ok)throw Error(result.error||'Nova could not connect. Please try again.');return result;
 }
