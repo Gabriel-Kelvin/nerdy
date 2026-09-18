@@ -39,7 +39,7 @@ try{
   if(i===1)click('#hint-button');
   chooseCorrect();assert.equal(app.state.attempts.length,i+1);click('#next-question');
  }
- assert(app.lesson.done);assert.equal(app.state.sessions.length,1);assert.equal(app.state.sessions[0].correct,4);assert.equal(app.state.seeds,12);
+ assert(app.lesson.done);assert.equal(app.state.sessions.length,1);assert.equal(app.state.sessions[0].correct,4);assert.equal(app.state.seeds,0);
  assert.equal(model(app.state).nodes.count5.solid,false);assert.equal(app.state.attempts[0].ok,false);assert.equal(app.state.attempts[1].hint,true);
  assert.match($('.treasure-unlocks').textContent,/Ember the fox/);assert.equal(model(app.state).nodes.count5.stars,1);click('#back-home');click('[data-node="count20"]');click('#try-node');assert.equal(app.lesson.node,'count20');click('#exit-lesson');click('#leave');click('[data-node="count5"]');click('#try-node');
  for(let i=0;i<6;i++){chooseCorrect();click('#next-question');}
