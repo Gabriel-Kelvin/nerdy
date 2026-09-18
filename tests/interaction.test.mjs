@@ -48,9 +48,9 @@ try{
  click('[data-landmark="0"]');assert.match($('#modal').textContent,/yours to keep/);click('[data-close]');
  click('[data-nav="collection"]');assert.equal(document.querySelectorAll('[data-equip]:not(:disabled)').length,2);click('[data-equip="🦊"]');assert.equal(app.state.avatar,'🦊');
  click('[data-nav="parent"]');assert.equal(document.querySelectorAll('.evidence tbody tr').length,24);
- click('[data-action="settings"]');$('#name').value='Nova Explorer';$('#grade').value='5';assert(!$('#pace')); click('#save-settings');
+ click('[data-action="settings"]');$('#name').value='Nova Explorer';$('#grade').value='5';assert(!$('#pace'));assert(!$('#download-journal')); click('#save-settings');
  assert.equal(app.state.grade,5);assert.equal(model(app.state).worlds[0].unlocked,1);
- click('[data-action="account"]');await new Promise(resolve=>setTimeout(resolve,0));assert.match($('#journals').textContent,/No saved journals/);click('#account-close');
+ click('[data-action="account"]');await new Promise(resolve=>setTimeout(resolve,0));assert($('#current-journal'));assert.match($('#journals').textContent,/No saved journals/);click('#account-close');
  assert.equal(saved.at(-1).name,'Nova Explorer');assert(!('interests' in saved.at(-1).nova));assert.equal(saved.at(-1).attempts.length,12);
  app.startNode('count20');const beforeTimeout=app.state.attempts.length;app.questionClock.elapsed=app.lesson.q.timeLimit*1000;app.questionClock.tick();assert.equal(app.state.attempts.length,beforeTimeout+1);assert.equal(app.state.attempts.at(-1).timedOut,true);assert.equal(app.state.attempts.at(-1).ok,false);chooseCorrect();assert.equal(app.state.attempts.length,beforeTimeout+1);assert.equal(app.lesson.correct,0);click('#exit-lesson');click('#leave');
  console.log('Passed: Nova introduction without interests prompt, removed interests, four worlds, sequential level guards, dark mode, temporary chat opening, first-attempt scoring, hints/retries, earned landmarks, keepsakes, settings, journal and save interactions.');
