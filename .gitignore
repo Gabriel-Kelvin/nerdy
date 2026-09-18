@@ -8,3 +8,5 @@ work/
 
 .vercel/
 *.tar.gz
+.vercel
+.env*

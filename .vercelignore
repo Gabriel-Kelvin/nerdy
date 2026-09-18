@@ -1,0 +1,14 @@
+.git/
+.openai/
+.vercel/
+node_modules/
+work/
+tests/
+docs/
+supabase/
+render/
+.env*
+README.md
+server.mjs
+*.zip
+*.tar.gz
